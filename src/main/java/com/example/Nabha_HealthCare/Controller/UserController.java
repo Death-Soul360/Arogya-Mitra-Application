@@ -1,0 +1,64 @@
+package com.example.Nabha_HealthCare.Controller;
+
+
+import com.example.Nabha_HealthCare.DTO.AuthResponse;
+import com.example.Nabha_HealthCare.DTO.LoginRequest;
+import com.example.Nabha_HealthCare.DTO.User;
+import com.example.Nabha_HealthCare.DTO.UserResponse;
+import com.example.Nabha_HealthCare.Service.User_Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/users")
+@CrossOrigin(origins = "*")
+public class UserController {
+
+    @Autowired
+    private User_Service userService;
+
+    @PostMapping("/register")
+    public UserResponse register(@RequestBody User userInput) {
+        return userService.register(userInput);
+    }
+
+    @PostMapping("/login")
+    public AuthResponse login(@RequestBody LoginRequest loginRequest) {return userService.login(loginRequest);}
+
+    @GetMapping("/me")
+    public AuthResponse me(@RequestParam Long userId) {
+
+        UserResponse user = userService.getById(userId);
+
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+
+        // 🟢 Role ke hisaab se permissions fetch
+        List<String> permissions = userService.permissionsForRole(user.getRole());
+
+        return new AuthResponse(user, permissions, "User info retrieved");
+    }
+
+    @GetMapping("/all")
+    public List<UserResponse> allUsers() {
+        return userService.getAllUsers();
+    }
+
+    @GetMapping("/{id}")
+    public UserResponse getById(@PathVariable Long id) {
+        return userService.getById(id);
+    }
+
+    @PutMapping("/{id}")
+    public UserResponse update(@PathVariable Long id, @RequestBody User u) {
+        return userService.updateUser(id, u);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        userService.deleteUser(id);
+    }
+}
