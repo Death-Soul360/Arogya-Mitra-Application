@@ -1,6 +1,6 @@
 package com.example.Nabha_HealthCare.Service;
 
-import com.example.Nabha_HealthCare.DTO.Doctor;
+import com.example.Nabha_HealthCare.Entity.Doctor;
 import com.example.Nabha_HealthCare.Repositories.Doctor_Repo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,19 +1,20 @@
-package com.example.Nabha_HealthCare.DTO;
+package com.example.Nabha_HealthCare.Entity;
+
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="appointments")
-public class Appointment {
+@Table(name="symptoms")
+public class Symptom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long appointmentId;
+    private Long symptomId;
+    private String symptomName;
+    private String description;
 
 
     @ManyToOne
@@ -29,11 +30,4 @@ public class Appointment {
     @ManyToOne
     @JoinColumn(name="hospital_id")
     private Hospital hospital;
-
-
-    private LocalDate appointmentDate;
-    private LocalTime appointmentTime;
-    private String appointmentSlot;
-    private Double fees;
-    private String status;
 }

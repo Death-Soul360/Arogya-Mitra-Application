@@ -1,7 +1,11 @@
-package com.example.Nabha_HealthCare.DTO;
+package com.example.Nabha_HealthCare.Entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 
 @Entity
@@ -16,6 +20,12 @@ public class Hospital {
     private String name;
     private String address;
     private String phoneNumber;
+
+    @OneToMany(mappedBy = "hospital", cascade = CascadeType.ALL)
+    private List<Doctor> doctors;
+
+    @OneToMany(mappedBy = "hospital", cascade = CascadeType.ALL)
+    private List<Patient> patients;
 
     @ManyToOne
     @JoinColumn(name="admin_id")

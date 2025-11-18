@@ -1,6 +1,6 @@
 package com.example.Nabha_HealthCare.Repositories;
 
-import com.example.Nabha_HealthCare.DTO.Patient;
+import com.example.Nabha_HealthCare.Entity.Patient;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;
@@ -18,4 +18,6 @@ public interface Patient_Repo extends JpaRepository<Patient,Integer> {
     List<Patient> findByPhone(String phone);
 
     List<Patient> findByVillage(String village);
+
+    List<Patient> findByHospital_HospitalId(Long hospitalId);
 }

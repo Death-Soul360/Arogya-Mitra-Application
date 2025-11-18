@@ -1,13 +1,12 @@
 package com.example.Nabha_HealthCare.Controller;
 
-import com.example.Nabha_HealthCare.DTO.Medicine;
+import com.example.Nabha_HealthCare.Entity.Medicine;
 import com.example.Nabha_HealthCare.Service.Medicine_Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/medicines")
@@ -31,18 +30,18 @@ public class Medicine_Controller {
 
     // Get Single Medicine
     @GetMapping("/{id}")
-    public Optional<Medicine> getMedById(@PathVariable Long id) {
-        return medicineService.getMedById(id);
+    public ResponseEntity<Medicine> getMedById(@PathVariable Long id) {
+        return ResponseEntity.ok(medicineService.getMedById(id));
     }
 
     // Update Medicine
-    @PutMapping("/{id}")
-    public void update(@PathVariable Long id, @RequestBody Medicine request) {
-         medicineService.update(id, request);
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Medicine> update(@PathVariable Long id, @RequestBody Medicine request) {
+        return ResponseEntity.ok(medicineService.update(id, request));
     }
 
     // Delete Medicine
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id) {
         medicineService.delete(id);
         return ResponseEntity.ok("Medicine deleted successfully");
@@ -50,13 +49,14 @@ public class Medicine_Controller {
 
     // Search By Disease
     @GetMapping("/disease/{disease}")
-    public Optional<Medicine> byDisease(@PathVariable String disease) {
-        return medicineService.findByDisease(disease);
+    public ResponseEntity<List<Medicine>> byDisease(@PathVariable String disease) {
+        List<Medicine> medicines = medicineService.byDisease(disease);
+        return ResponseEntity.ok(medicines);
     }
 
     // Search By Name
-    @GetMapping("/search")
-    public Optional<Medicine> searchByName(@RequestParam String name) {
+    @GetMapping("/byName")
+    public Medicine searchByName(@RequestParam String name) {
         return medicineService.searchByName(name);
     }
 }

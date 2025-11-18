@@ -1,4 +1,4 @@
-package com.example.Nabha_HealthCare.DTO;
+package com.example.Nabha_HealthCare.Entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,18 +9,16 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="doctors")
-public class Doctor {
+@Table(name="patients")
+public class Patient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long doctorId;
+    private Long patientId;
     private String name;
     private String gender;
-    private String qualification;
     private String email;
     private String password;
-    private String specialist;
-    private Double fees;
+    private String disease;
     private Integer age;
 
 
@@ -29,6 +27,6 @@ public class Doctor {
     private Hospital hospital;
 
 
-    @OneToMany(mappedBy="doctor")
+    @OneToMany(mappedBy="patient")
     private List<Appointment> appointments;
 }

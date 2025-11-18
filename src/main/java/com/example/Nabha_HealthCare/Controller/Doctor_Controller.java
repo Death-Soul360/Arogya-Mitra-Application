@@ -1,6 +1,6 @@
 package com.example.Nabha_HealthCare.Controller;
 
-import com.example.Nabha_HealthCare.DTO.Doctor;
+import com.example.Nabha_HealthCare.Entity.Doctor;
 import com.example.Nabha_HealthCare.Service.Doctor_Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

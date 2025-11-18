@@ -1,7 +1,7 @@
 package com.example.Nabha_HealthCare.Service;
 
-import com.example.Nabha_HealthCare.DTO.Patient;
-import com.example.Nabha_HealthCare.DTO.SymptomChecker;
+import com.example.Nabha_HealthCare.Entity.Patient;
+import com.example.Nabha_HealthCare.Entity.SymptomChecker;
 import com.example.Nabha_HealthCare.Repositories.Patient_Repo;
 import com.example.Nabha_HealthCare.Repositories.SymptomChecker_Repo;
 import org.springframework.beans.factory.annotation.Autowired;

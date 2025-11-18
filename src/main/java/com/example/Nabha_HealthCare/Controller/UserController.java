@@ -3,7 +3,7 @@ package com.example.Nabha_HealthCare.Controller;
 
 import com.example.Nabha_HealthCare.DTO.AuthResponse;
 import com.example.Nabha_HealthCare.DTO.LoginRequest;
-import com.example.Nabha_HealthCare.DTO.User;
+import com.example.Nabha_HealthCare.Entity.User;
 import com.example.Nabha_HealthCare.DTO.UserResponse;
 import com.example.Nabha_HealthCare.Service.User_Service;
 import org.springframework.beans.factory.annotation.Autowired;

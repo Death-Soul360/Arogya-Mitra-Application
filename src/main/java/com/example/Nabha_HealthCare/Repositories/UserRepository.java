@@ -1,6 +1,6 @@
 package com.example.Nabha_HealthCare.Repositories;
 
-import com.example.Nabha_HealthCare.DTO.User;
+import com.example.Nabha_HealthCare.Entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

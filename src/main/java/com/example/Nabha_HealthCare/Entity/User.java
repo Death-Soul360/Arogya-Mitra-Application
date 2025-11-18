@@ -1,4 +1,4 @@
-package com.example.Nabha_HealthCare.DTO;
+package com.example.Nabha_HealthCare.Entity;
 
 import jakarta.persistence.*;
 import lombok.*;

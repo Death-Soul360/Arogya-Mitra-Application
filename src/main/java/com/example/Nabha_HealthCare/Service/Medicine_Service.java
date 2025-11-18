@@ -1,12 +1,11 @@
 package com.example.Nabha_HealthCare.Service;
 
-import com.example.Nabha_HealthCare.DTO.Medicine;
+import com.example.Nabha_HealthCare.Entity.Medicine;
 import com.example.Nabha_HealthCare.Repositories.Medicine_Repo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class Medicine_Service {
@@ -25,20 +24,24 @@ public class Medicine_Service {
                 .stream()
                 .map(m -> new Medicine(
                         m.getMedicineId(), m.getName(), m.getSalts(), m.getIngredients(),
-                        m.getPrice(), m.getDisease(), m.getExpiryDate(), m.getCategory(),m.getManufacturer()
+                        m.getPrice(), m.getDisease(), m.getExpiryDate(), m.getCategory(), m.getManufacturer()
                 )).toList();
     }
 
     // Get One Medicine
-    public Optional<Medicine> getMedById(Long id) {
-        return medicineRepository.findById(Math.toIntExact(id));
+    public Medicine getMedById(Long id) {
+        Medicine m = medicineRepository.findById(Math.toIntExact(id))
+                .orElseThrow(() -> new RuntimeException("Medicine Not Found"));
 
-
+        return new Medicine(
+                m.getMedicineId(), m.getName(), m.getSalts(), m.getIngredients(),
+                m.getPrice(), m.getDisease(), m.getExpiryDate(), m.getCategory(),m.getManufacturer()
+        );
     }
 
     // Update Medicine
-    public void update(Long id, Medicine req) {
-        Medicine m = medicineRepository.findById(id)
+    public Medicine update(Long id, Medicine req) {
+        Medicine m = medicineRepository.findById(Math.toIntExact(id))
                 .orElseThrow(() -> new RuntimeException("Medicine not found"));
 
         m.setName(req.getName());
@@ -50,6 +53,12 @@ public class Medicine_Service {
         m.setCategory(req.getCategory());
 
         Medicine saved = medicineRepository.save(m);
+
+        return new Medicine(
+                saved.getMedicineId(), saved.getName(), saved.getSalts(),
+                saved.getIngredients(), saved.getPrice(), saved.getDisease(),
+                saved.getExpiryDate(), saved.getCategory(),saved.getManufacturer()
+        );
     }
 
     // Delete Medicine
@@ -58,12 +67,18 @@ public class Medicine_Service {
     }
 
     // Search By Disease
-    public Optional<Medicine> findByDisease(String disease) {
-        return medicineRepository.findByDisease(disease);
+    public List<Medicine> byDisease(String disease) {
+        return medicineRepository.findByDisease(disease)
+                .stream()
+                .map(m -> new Medicine(m.getMedicineId(), m.getName(), m.getSalts(),
+                        m.getIngredients(), m.getPrice(), m.getDisease(),
+                        m.getExpiryDate(), m.getCategory(), m.getManufacturer()))
+                .toList();
     }
 
     // Search By Name
-    public Optional<Medicine> searchByName(String name) {
-        return medicineRepository.findByNameContainingIgnoreCase(name);
+    public Medicine searchByName(String name) {
+        return (Medicine) medicineRepository.findByNameContainingIgnoreCase(name).orElseThrow(()->new RuntimeException("Medicine Not Found!"));
+
     }
 }

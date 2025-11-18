@@ -1,11 +1,15 @@
 package com.example.Nabha_HealthCare.Service;
 
-import com.example.Nabha_HealthCare.DTO.Doctor;
-import com.example.Nabha_HealthCare.DTO.Hospital;
-import com.example.Nabha_HealthCare.DTO.Medicine;
+import com.example.Nabha_HealthCare.DTO.HospitalRequest;
+import com.example.Nabha_HealthCare.DTO.HospitalResponse;
+import com.example.Nabha_HealthCare.Entity.Doctor;
+import com.example.Nabha_HealthCare.Entity.Hospital;
+import com.example.Nabha_HealthCare.Entity.Patient;
+import com.example.Nabha_HealthCare.Entity.User;
 import com.example.Nabha_HealthCare.Repositories.Doctor_Repo;
 import com.example.Nabha_HealthCare.Repositories.Hospital_Repo;
-import com.example.Nabha_HealthCare.Repositories.Medicine_Repo;
+import com.example.Nabha_HealthCare.Repositories.Patient_Repo;
+import com.example.Nabha_HealthCare.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,58 +17,101 @@ import java.util.List;
 
 @Service
 public class Hospital_Service {
+
     @Autowired
     private Hospital_Repo hospitalRepo;
 
     @Autowired
-    private Doctor_Repo doctorRepo;
+    private Doctor_Repo doctorRepository;
 
     @Autowired
-    private Medicine_Repo medicineRepo;
+    private Patient_Repo patientRepository;
 
-    public List<Hospital> getHospitals() {
-        return hospitalRepo.findAll();
+    @Autowired
+    private UserRepository userRepository;
+
+    public List<Doctor> getDoctorsByHospital(Long hospitalId) {
+        return doctorRepository.findByHospital_HospitalId(Math.toIntExact(hospitalId));
     }
 
-    public List<Hospital> hospitalByName(String name) {
-        return hospitalRepo.findByName(name);
+    public List<Patient> getPatientsByHospital(Long hospitalId) {
+        return patientRepository.findByHospital_HospitalId(hospitalId);
     }
 
-    public List<Hospital> hospitalByLoc(String location) {
-        return hospitalRepo.findByLocation(location);
+    // Create Hospital
+    public HospitalResponse createHospital(HospitalRequest request) {
+
+        User admin = userRepository.findById(request.getAdminId())
+                .orElseThrow(() -> new RuntimeException("Admin not found"));
+
+        Hospital hospital = new Hospital();
+        hospital.setName(request.getName());
+        hospital.setAddress(request.getAddress());
+        hospital.setPhoneNumber(request.getPhoneNumber());
+        hospital.setAdmin(admin);
+
+        Hospital saved = hospitalRepo.save(hospital);
+
+        return mapToResponse(saved);
     }
 
-    public Hospital hospitalById(Integer id) {
-        return hospitalRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Hospital not found with ID: " + id));
+    // Get All Hospitals
+    public List<HospitalResponse> getAllHospital() {
+        return hospitalRepo.findAll()
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
     }
 
-    public Hospital addHospital(Hospital hospital) {
-        return hospitalRepo.save(hospital);
+    // Get hospital by ID
+    public HospitalResponse getHospitalById(Long id) {
+        Hospital hospital = hospitalRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Hospital not found"));
+
+        return mapToResponse(hospital);
     }
 
-    public Hospital updateHospital(Integer id, Hospital updatedHospital) {
-        Hospital hospital = hospitalById(id);
-        hospital.setName(updatedHospital.getName());
-        hospital.setLocation(updatedHospital.getLocation());
-        return hospitalRepo.save(hospital);
+    // Update Hospital
+    public HospitalResponse updateHospital(Long id, HospitalRequest request) {
+
+        Hospital hospital = hospitalRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Hospital not found"));
+
+        hospital.setName(request.getName());
+        hospital.setAddress(request.getAddress());
+        hospital.setPhoneNumber(request.getPhoneNumber());
+
+        if (request.getAdminId() != null) {
+            User admin = userRepository.findById(request.getAdminId())
+                    .orElseThrow(() -> new RuntimeException("Admin not found"));
+
+            hospital.setAdmin(admin);
+        }
+
+        Hospital updated = hospitalRepo.save(hospital);
+        return mapToResponse(updated);
     }
 
-
-    // 🔹 7. Delete hospital
-    public void deleteHospital(Integer id) {
+    // Delete Hospital
+    public void deleteHospital(Long id) {
         hospitalRepo.deleteById(id);
     }
 
-    // 🔹 8. Get doctors in a hospital
-    public List<Doctor> getDoctorsByHospital(Integer id) {
-        Hospital hospital = hospitalById(id);
-        return doctorRepo.findByHospital(hospital);
+
+    // MAPPER
+    private HospitalResponse mapToResponse(Hospital h) {
+        return new HospitalResponse(
+                h.getHospitalId(),
+                h.getName(),
+                h.getAddress(),
+                h.getPhoneNumber(),
+                h.getAdmin() != null ? h.getAdmin().getUserId() : null,
+                h.getAdmin() != null ? h.getAdmin().getName() : null
+        );
     }
 
-    // 🔹 9. Get medicines in a hospital
-    public List<Medicine> getMedicinesByHospital(Integer id) {
-        Hospital hospital = hospitalById(id);
-        return medicineRepo.findByHospital(hospital);
+    public HospitalResponse getHospitalByName(String name) {
+        return hospitalRepo.findByName(name);
     }
 }
+

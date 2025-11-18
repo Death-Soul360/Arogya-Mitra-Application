@@ -1,71 +1,72 @@
 package com.example.Nabha_HealthCare.Controller;
 
-import com.example.Nabha_HealthCare.DTO.Doctor;
-import com.example.Nabha_HealthCare.DTO.Hospital;
-import com.example.Nabha_HealthCare.DTO.Medicine;
+import com.example.Nabha_HealthCare.DTO.HospitalRequest;
+import com.example.Nabha_HealthCare.DTO.HospitalResponse;
+import com.example.Nabha_HealthCare.Entity.Doctor;
+import com.example.Nabha_HealthCare.Entity.Patient;
 import com.example.Nabha_HealthCare.Service.Hospital_Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/hospital")
+@RequestMapping("/api/hospitals")
+@CrossOrigin("*")
 public class Hospital_Controller {
 
     @Autowired
     private Hospital_Service hospitalService;
 
-    // 1. Get all hospitals
-    @GetMapping("/all")
-    public List<Hospital> getHospitals() {
-        return hospitalService.getHospitals();
-    }
-
-    // 2. Get by ID
-    @GetMapping("/byId/{id}")
-    public Hospital hospitalById(@PathVariable Integer id) {
-        return hospitalService.hospitalById(id);
-    }
-
-    // 3. Get by Name
-    @GetMapping("/byName")
-    public List<Hospital> hospitalByName(@RequestParam String name) {
-        return hospitalService.hospitalByName(name);
-    }
-
-    // 4. Get by Location
-    @GetMapping("/byLocation")
-    public List<Hospital> hospitalByLoc(@RequestParam String loc) {
-        return hospitalService.hospitalByLoc(loc);
-}
-    // 5. Add new hospital
+    // Create
     @PostMapping("/add")
-    public Hospital addHospital(@RequestBody Hospital hospital) {
-        return hospitalService.addHospital(hospital);
+    public ResponseEntity<HospitalResponse> createHospital(@RequestBody HospitalRequest request) {
+        return ResponseEntity.ok(hospitalService.createHospital(request));
     }
 
-    // 6. Update hospital
+    // Get All
+    @GetMapping("/all")
+    public ResponseEntity<List<HospitalResponse>> getAllHospital() {
+        return ResponseEntity.ok(hospitalService.getAllHospital());
+    }
+
+    // Get by ID
+    @GetMapping("/{id}")
+    public ResponseEntity<HospitalResponse> getHospitalById(@PathVariable Long id) {
+        return ResponseEntity.ok(hospitalService.getHospitalById(id));
+    }
+
+    // Get doctors of a hospital
+    @GetMapping("/{hospitalId}/doctors")
+    public List<Doctor> getDoctors(@PathVariable Long hospitalId) {
+        return hospitalService.getDoctorsByHospital(hospitalId);
+    }
+
+    // Get patients of a hospital
+    @GetMapping("/{hospitalId}/patients")
+    public List<Patient> getPatients(@PathVariable Long hospitalId) {
+        return hospitalService.getPatientsByHospital(hospitalId);
+    }
+
+    // Get by Name
+    @GetMapping("/byName")
+    public ResponseEntity<HospitalResponse> getHospitalByName(@RequestParam String name) {
+        return ResponseEntity.ok(hospitalService.getHospitalByName(name));
+    }
+
+    // Update
     @PutMapping("/update/{id}")
-    public Hospital updateHospital(@PathVariable Integer id, @RequestBody Hospital hospital) {
-        return hospitalService.updateHospital(id, hospital);
+    public ResponseEntity<HospitalResponse> updateHospital(
+            @PathVariable Long id,
+            @RequestBody HospitalRequest request) {
+        return ResponseEntity.ok(hospitalService.updateHospital(id, request));
     }
 
-    // 7. Delete hospital
+    // Delete
     @DeleteMapping("/delete/{id}")
-    public void deleteHospital(@PathVariable Integer id) {
+    public ResponseEntity<String> deleteHospital(@PathVariable Long id) {
         hospitalService.deleteHospital(id);
-    }
-
-    // 8. Get doctors in a hospital
-    @GetMapping("/{id}/doctors")
-    public List<Doctor> getDoctorsByHospital(@PathVariable Integer id) {
-        return hospitalService.getDoctorsByHospital(id);
-    }
-
-    // 9. Get medicines in a hospital
-    @GetMapping("/{id}/medicines")
-    public List<Medicine> getMedicinesByHospital(@PathVariable Integer id) {
-        return hospitalService.getMedicinesByHospital(id);
+        return ResponseEntity.ok("Hospital deleted successfully.");
     }
 }

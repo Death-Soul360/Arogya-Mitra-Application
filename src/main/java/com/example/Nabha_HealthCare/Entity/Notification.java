@@ -1,4 +1,4 @@
-package com.example.Nabha_HealthCare.DTO;
+package com.example.Nabha_HealthCare.Entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,11 +9,11 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="activity_log")
-public class ActivityLog {
+@Table(name="notifications")
+public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long logId;
+    private Long notificationId;
 
 
     @ManyToOne
@@ -21,6 +21,7 @@ public class ActivityLog {
     private User user;
 
 
-    private String action;
-    private LocalDateTime logTime;
+    private String message;
+    private LocalDateTime createdAt;
+    private Boolean isRead;
 }

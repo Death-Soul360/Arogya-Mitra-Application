@@ -2,7 +2,7 @@ package com.example.Nabha_HealthCare.Service;
 
 import com.example.Nabha_HealthCare.DTO.AuthResponse;
 import com.example.Nabha_HealthCare.DTO.LoginRequest;
-import com.example.Nabha_HealthCare.DTO.User;
+import com.example.Nabha_HealthCare.Entity.User;
 import com.example.Nabha_HealthCare.DTO.UserResponse;
 import com.example.Nabha_HealthCare.Repositories.UserRepository;
 import org.springframework.stereotype.Service;
